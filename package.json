@@ -4,25 +4,29 @@
   "author": "Andre Gallo <afgallo@gmail.com>",
   "description": "DynamoDB data wrapper for node.js applications",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "lint": "eslint .",
     "test": "make test",
-    "ci": "make coverage",
-    "coveralls": "cat coverage/lcov.info | coveralls"
+    "ci": "make coverage"
   },
   "repository": "https://github.com/afgallo/dynowrap.git",
   "keywords": [
     "datamapper",
-    "DynamoDB",
+    "database",
     "dynamodb",
     "aws",
     "amazon",
-    "nosql"
+    "nosql",
+    "nodejs"
   ],
   "engines": {
     "node": ">=12"
   },
-  "license": "MIT",
+  "files": [
+    "lib/",
+    "package.json"
+  ],
   "dependencies": {
     "async": "2.6.3",
     "aws-sdk": "2.789.0",
