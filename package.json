@@ -1,0 +1,71 @@
+{
+  "name": "dynowrap",
+  "version": "1.0.0",
+  "author": "Andre Gallo <afgallo@gmail.com>",
+  "description": "DynamoDB data wrapper for node.js applications",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "make test",
+    "ci": "make coverage",
+    "coveralls": "cat coverage/lcov.info | coveralls"
+  },
+  "repository": "https://github.com/afgallo/dynowrap.git",
+  "keywords": [
+    "datamapper",
+    "DynamoDB",
+    "dynamodb",
+    "aws",
+    "amazon",
+    "nosql"
+  ],
+  "engines": {
+    "node": ">=12"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "async": "2.6.3",
+    "aws-sdk": "2.789.0",
+    "lodash": "4.17.20",
+    "uuid": "8.3.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "11.x.x",
+    "@commitlint/config-conventional": "11.x.x",
+    "chai": "4.x.x",
+    "commitizen": "4.x.x",
+    "coveralls": "3.x.x",
+    "eslint": "7.x.x",
+    "eslint-config-airbnb-base": "14.x.x",
+    "eslint-plugin-import": "2.x.x",
+    "husky": "4.x.x",
+    "joi": "17.x.x",
+    "lint-staged": "10.x.x",
+    "mocha": "8.x.x",
+    "nyc": "15.x.x",
+    "prettier": "2.x.x",
+    "semantic-release": "17.x.x",
+    "sinon": "9.x.x"
+  },
+  "peerDependencies": {
+    "joi": ">=17.3.x",
+    "aws-sdk": ">= 2.789.x"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "eslint --quiet --fix"
+    ]
+  }
+}
