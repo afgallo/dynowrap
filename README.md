@@ -25,7 +25,7 @@ dynowrap is a [DynamoDB][4] data wrapper for [node.js][1]. This project has been
 First, you need to configure the [AWS SDK][2] with your credentials.
 
 ```js
-var dynowrap = require('dynowrap');
+const dynowrap = require('dynowrap');
 dynowrap.AWS.config.loadFromPath('credentials.json');
 ```
 
@@ -36,7 +36,7 @@ and you do not need to manually provide credentials in any other format.
 If you are running on Lambda, there's nothing else to do besides setting your region as per below:
 
 ```js
-var dynowrap = require('dynowrap');
+const dynowrap = require('dynowrap');
 dynowrap.AWS.config.update({region: "REGION"}); // region must be set
 ```
 
@@ -45,7 +45,7 @@ You can also directly pass in your access key id, secret and region.
   Use this method only for small personal scripts or for testing purposes.
 
 ```js
-var dynowrap = require('dynowrap');
+const dynowrap = require('dynowrap');
 dynowrap.AWS.config.update({accessKeyId: 'AKID', secretAccessKey: 'SECRET', region: "REGION"});
 ```
 
@@ -79,7 +79,7 @@ Currently the following region codes are available in Amazon:
 Models are defined through the toplevel define method.
 
 ```js
-var Account = dynowrap.define('Account', {
+const Account = dynowrap.define('Account', {
   hashKey : 'email',
 
   // add the timestamp attributes (updatedAt, createdAt)
@@ -101,7 +101,7 @@ var Account = dynowrap.define('Account', {
 Models can also be defined with hash and range keys.
 
 ```js
-var BlogPost = dynowrap.define('BlogPost', {
+const BlogPost = dynowrap.define('BlogPost', {
   hashKey : 'email',
   rangeKey : ‘title’,
   schema : {
@@ -116,7 +116,7 @@ var BlogPost = dynowrap.define('BlogPost', {
 You can pass through validation options to Joi like so:
 
 ```js
-var BlogPost = dynowrap.define('BlogPost', {
+const BlogPost = dynowrap.define('BlogPost', {
   hashKey : 'email',
   rangeKey : 'title',
   schema : {
@@ -147,8 +147,8 @@ When creating tables you can pass specific throughput settings or stream specifi
 
 ```js
 dynowrap.createTables({
-  'BlogPost': {readCapacity: 5, writeCapacity: 10},
-  'Account': {
+  BlogPost: {readCapacity: 5, writeCapacity: 10},
+  Account: {
     readCapacity: 20,
     writeCapacity: 4,
     streamSpecification: {
@@ -197,8 +197,8 @@ BlogPost.deleteTable(function(err) {
 You can get the raw parameters needed for the DynamoDB [CreateTable API](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_CreateTable.html):
 
 ```js
-var parameters = BlogPost.dynamoCreateTableParams();
-var dynamodb = new AWS.DynamoDB();
+const parameters = BlogPost.dynamoCreateTableParams();
+const dynamodb = new AWS.DynamoDB();
 dynamodb.createTable(params, (err)=>{ ... });
 ```
 
@@ -220,7 +220,7 @@ Default, the uuid will be automatically generated when attempting to create
 the model in DynamoDB.
 
 ```js
-var Tweet = dynowrap.define('Tweet', {
+const Tweet = dynowrap.define('Tweet', {
   hashKey : 'TweetID',
   timestamps : true,
   schema : {
@@ -234,7 +234,7 @@ var Tweet = dynowrap.define('Tweet', {
 dynowrap automatically validates the model against the schema before attempting to save it, but you can also call the `validate` method to validate an object before saving it. This can be helpful for a handler to validate input.
 
 ```js
-var Tweet = dynowrap.define('Tweet', {
+const Tweet = dynowrap.define('Tweet', {
   hashKey : 'TweetID',
   timestamps : true,
   schema : {
@@ -258,7 +258,7 @@ saving and updating a model. `updatedAt` will only be set when updating a record
 and will not be set on initial creation of the model.
 
 ```js
-var Account = dynowrap.define('Account', {
+const Account = dynowrap.define('Account', {
   hashKey : 'email',
 
   // add the timestamp attributes (updatedAt, createdAt)
@@ -274,7 +274,7 @@ If you want dynowrap to handle timestamps, but only want some of them, or want y
 timestamps to be called something else, you can override each attribute individually:
 
 ```js
-var Account = dynowrap.define('Account', {
+const Account = dynowrap.define('Account', {
   hashKey : 'email',
 
   // enable timestamps support
@@ -295,7 +295,7 @@ var Account = dynowrap.define('Account', {
 You can override the table name the model will use.
 
 ```js
-var Event = dynowrap.define('Event', {
+const Event = dynowrap.define('Event', {
   hashKey : 'name',
   schema : {
     name : Joi.string(),
@@ -310,7 +310,7 @@ if you set the tableName to a function, dynowrap will use the result of the func
 Useful for storing time series data.
 
 ```js
-var Event = dynowrap.define('Event', {
+const Event = dynowrap.define('Event', {
   hashKey : 'name',
   schema : {
     name : Joi.string(),
@@ -319,7 +319,7 @@ var Event = dynowrap.define('Event', {
 
   // store monthly event data
   tableName: function () {
-    var d = new Date();
+    const d = new Date();
     return ['events', d.getFullYear(), d.getMonth() + 1].join('_');
   }
 });
@@ -335,7 +335,7 @@ Account.config({tableName: 'AccountsTable'});
 
 You can also pass in a custom instance of the aws-sdk DynamoDB client
 ```js
-var dynamodb = new AWS.DynamoDB();
+const dynamodb = new AWS.DynamoDB();
 Account.config({dynamodb: dynamodb});
 
 // or globally use custom DynamoDB instance
@@ -355,7 +355,7 @@ Account.create({email: 'foo@example.com', name: 'Foo Bar', age: 21}, function (e
 You can also first instantiate a model and then save it.
 
 ```js
-var acc = new Account({email: 'test@example.com', name: 'Test Example'});
+const acc = new Account({email: 'test@example.com', name: 'Test Example'});
 acc.save(function (err) {
   console.log('created account in DynamoDB', acc.get('email'));
 });
@@ -377,9 +377,9 @@ BlogPost.create({
 Pass an array of items and they will be saved in parallel to DynamoDB.
 
 ```js
-var item1 = {email: 'foo1@example.com', name: 'Foo 1', age: 10};
-var item2 = {email: 'foo2@example.com', name: 'Foo 2', age: 20};
-var item3 = {email: 'foo3@example.com', name: 'Foo 3', age: 30};
+const item1 = {email: 'foo1@example.com', name: 'Foo 1', age: 10};
+const item2 = {email: 'foo2@example.com', name: 'Foo 2', age: 20};
+const item3 = {email: 'foo3@example.com', name: 'Foo 3', age: 30};
 
 Account.create([item1, item2, item3], function (err, acccounts) {
   console.log('created 3 accounts in DynamoDB', accounts);
@@ -389,7 +389,7 @@ Account.create([item1, item2, item3], function (err, acccounts) {
 Use expressions api to do conditional writes
 
 ```js
-  var params = {};
+  const params = {};
   params.ConditionExpression = '#i <> :x';
   params.ExpressionAttributeNames = {'#i' : 'id'};
   params.ExpressionAttributeValues = {':x' : 123};
@@ -456,7 +456,7 @@ Account.update(
 
 This is essentially short-hand for:
 ```js
-var params = {};
+const params = {};
     params.ConditionExpression = 'attribute_exists(#hashKey)';
     params.ExpressionAttributeNames = { '#hashKey' : 'email' };
 ```
@@ -509,7 +509,7 @@ BlogPost.update({
 Use the expressions api to update nested documents
 
 ```js
-var params = {};
+const params = {};
   params.UpdateExpression = 'SET #year = #year + :inc, #dir.titles = list_append(#dir.titles, :title), #act[0].firstName = :firstName ADD tags :tag';
   params.ConditionExpression = '#year = :current';
   params.ExpressionAttributeNames = {
@@ -565,7 +565,7 @@ Account.destroy('foo@example.com', {expected: {age: 22}}, function (err) {
 Use expression apis to perform conditional deletes
 
 ```js
-var params = {};
+const params = {};
 params.ConditionExpression = '#v = :x';
 params.ExpressionAttributeNames = {'#v' : 'version'};
 params.ExpressionAttributeValues = {':x' : '2'};
@@ -788,7 +788,7 @@ See the queryFilter.js [example][0] for more examples of using query filters
 First, define a model with a global secondary index.
 
 ```js
-var GameScore = dynowrap.define('GameScore', {
+const GameScore = dynowrap.define('GameScore', {
   hashKey : 'userId',
   rangeKey : 'gameTitle',
   schema : {
@@ -820,7 +820,7 @@ By default all attributes will be projected when no Projection pramater is
 present
 
 ```js
-var GameScore = dynowrap.define('GameScore', {
+const GameScore = dynowrap.define('GameScore', {
   hashKey : 'userId',
   rangeKey : 'gameTitle',
   schema : {
@@ -859,7 +859,7 @@ GameScore
 First, define a model using a local secondary index
 
 ```js
-var BlogPost = dynowrap.define('Account', {
+const BlogPost = dynowrap.define('Account', {
   hashKey : 'email',
   rangeKey : 'title',
   schema : {
@@ -1080,8 +1080,8 @@ Account.getItems(['foo@example.com','bar@example.com', 'test@example.com'], func
 });
 
 // For models with range keys you must pass in objects of hash and range key attributes
-var postKey1 = {email : 'test@example.com', title : 'Hello World!'};
-var postKey2 = {email : 'test@example.com', title : 'Another Post'};
+const postKey1 = {email : 'test@example.com', title : 'Hello World!'};
+const postKey2 = {email : 'test@example.com', title : 'Another Post'};
 
 BlogPost.getItems([postKey1, postKey2], function (err, posts) {
   console.log('loaded posts');
@@ -1102,7 +1102,7 @@ dynowrap supports a basic streaming api in addition to the callback
 api for `query` and `scan` operations.
 
 ```js
-var querystream = BlogPost.query('werner@dynowrap.com').loadAll().exec();
+const querystream = BlogPost.query('werner@dynowrap.com').loadAll().exec();
 
 querystream.on('readable', function () {
   console.log('single query response', stream.read());
@@ -1117,7 +1117,7 @@ querystream.on('end', function () {
 dynowrap supports dynamic table names, useful for storing time series data.
 
 ```js
-var Event = dynowrap.define('Event', {
+const Event = dynowrap.define('Event', {
   hashKey : 'name',
   schema : {
     name : Joi.string(),
@@ -1126,7 +1126,7 @@ var Event = dynowrap.define('Event', {
 
   // store monthly event data
   tableName: function () {
-    var d = new Date();
+    const d = new Date();
     return ['events', d.getFullYear(), d.getMonth() + 1].join('_');
   }
 });
@@ -1156,7 +1156,7 @@ const accountLogger = bunyan.createLogger(
     level:'info'
   })
 
-var Account = dynowrap.define('Account', {
+const Account = dynowrap.define('Account', {
   hashKey: 'email',
   log: accountLogger
 }); // INFO level on account table
@@ -1167,9 +1167,9 @@ var Account = dynowrap.define('Account', {
 ## Examples
 
 ```js
-var dynowrap = require('dynowrap');
+const dynowrap = require('dynowrap');
 
-var Account = dynowrap.define('Account', {
+const Account = dynowrap.define('Account', {
   hashKey : 'email',
 
   // add the timestamp attributes (updatedAt, createdAt)
@@ -1202,18 +1202,16 @@ dynowrap is provided as-is, free of charge. For support, you have a few choices:
 
 - Ask your support question on [Stackoverflow.com](http://stackoverflow.com), and tag your question with **dynowrap**.
 - If you believe you have found a bug in dynowrap, please submit a support ticket on
- the [Github Issues page for dynowrap](http://github.com/clarkie/dynowrap/issues). We'll get to them as soon as we can.
-- For general feedback message me on [twitter](https://twitter.com/clarkieclarkie)
+ the [Github Issues page for dynowrap](https://github.com/afgallo/dynowrap/issues). We'll get to them as soon as we can.
+- For general feedback message me on [twitter](https://twitter.com/andre__gallo)
 - For more personal or immediate support, I’m available for hire to consult on your project.
 [Contact](mailto:andrew.t.clarke@gmail.com) me for more detals.
 
 ### Maintainers
 
-- [Andre Gallo](https://github.com/afgallo) ([@andre__gallo](https://twitter.com/andre__gallo)
+- [Andre Gallo](https://github.com/afgallo) ([@andre__gallo](https://twitter.com/andre__gallo))
 
 ### License
-Original author's license below:
-
 The MIT License
 
 Copyright (c) 2016 Ryan Fitzgerald
