@@ -16,11 +16,14 @@ jobs:
       - name: Set up DynamoDB Local
         uses: rrainn/dynamodb-action@v2.0.0
 
-      - name: Install Packages
+      - name: Install
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       - name: Test
-        run: make coverage
+        run: npm run test:coverage:ci
 
       - name: Coveralls
         uses: coverallsapp/github-action@master

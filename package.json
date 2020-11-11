@@ -7,8 +7,11 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
-    "test": "make test",
-    "ci": "make coverage"
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "mocha --reporter list --ui bdd test/*.test.js",
+    "test:integration": "mocha --reporter spec --ui bdd test/integration/*.test.js",
+    "test:coverage": "nyc npm run test",
+    "test:coverage:ci": "nyc --reporter=lcov npm run test"
   },
   "repository": "https://github.com/afgallo/dynowrap.git",
   "keywords": [
