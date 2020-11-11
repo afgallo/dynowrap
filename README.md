@@ -37,7 +37,7 @@ If you are running on Lambda, there's nothing else to do besides setting your re
 
 ```js
 const dynowrap = require('dynowrap');
-dynowrap.AWS.config.update({region: "REGION"}); // region must be set
+dynowrap.AWS.config.update({ region: 'REGION' }); // region must be set
 ```
 
 You can also directly pass in your access key id, secret and region.
@@ -46,7 +46,7 @@ You can also directly pass in your access key id, secret and region.
 
 ```js
 const dynowrap = require('dynowrap');
-dynowrap.AWS.config.update({accessKeyId: 'AKID', secretAccessKey: 'SECRET', region: "REGION"});
+dynowrap.AWS.config.update({ accessKeyId: 'AKID', secretAccessKey: 'SECRET', region: 'REGION' });
 ```
 
 Currently the following region codes are available in Amazon:
@@ -103,7 +103,7 @@ Models can also be defined with hash and range keys.
 ```js
 const BlogPost = dynowrap.define('BlogPost', {
   hashKey : 'email',
-  rangeKey : ‘title’,
+  rangeKey : 'title',
   schema : {
     email   : Joi.string().email(),
     title   : Joi.string(),
@@ -134,7 +134,7 @@ const BlogPost = dynowrap.define('BlogPost', {
 ### Create Tables for all defined models
 
 ```js
-dynowrap.createTables(function(err) {
+dynowrap.createTables((err) => {
   if (err) {
     console.log('Error creating tables: ', err);
   } else {
@@ -147,7 +147,7 @@ When creating tables you can pass specific throughput settings or stream specifi
 
 ```js
 dynowrap.createTables({
-  BlogPost: {readCapacity: 5, writeCapacity: 10},
+  BlogPost: { readCapacity: 5, writeCapacity: 10 },
   Account: {
     readCapacity: 20,
     writeCapacity: 4,
@@ -156,7 +156,7 @@ dynowrap.createTables({
       streamViewType: 'NEW_IMAGE'
     }
   }
-}, function(err) {
+}, (err) => {
   if (err) {
     console.log('Error creating tables: ', err);
   } else {
@@ -172,7 +172,7 @@ You can also pass operational options using the `$dynowrap` key:
 ```js
 dynowrap.createTables({
   $dynowrap: { pollingInterval: 100 }
-}, function(err) {
+}, (err) => {
   if (err) {
     console.log('Error creating tables: ', err);
   } else {
@@ -184,7 +184,7 @@ dynowrap.createTables({
 ### Delete Table
 
 ```js
-BlogPost.deleteTable(function(err) {
+BlogPost.deleteTable((err) => {
   if (err) {
     console.log('Error deleting table: ', err);
   } else {
@@ -199,7 +199,7 @@ You can get the raw parameters needed for the DynamoDB [CreateTable API](https:/
 ```js
 const parameters = BlogPost.dynamoCreateTableParams();
 const dynamodb = new AWS.DynamoDB();
-dynamodb.createTable(params, (err)=>{ ... });
+dynamodb.createTable(params, (err) => { ... });
 ```
 
 ### Schema Types
@@ -330,13 +330,13 @@ By default, the table name used will be the lowercased and pluralized version
 of the name you provided when defining the model.
 
 ```js
-Account.config({tableName: 'AccountsTable'});
+Account.config({ tableName: 'AccountsTable' });
 ```
 
 You can also pass in a custom instance of the aws-sdk DynamoDB client
 ```js
 const dynamodb = new AWS.DynamoDB();
-Account.config({dynamodb: dynamodb});
+Account.config({ dynamodb: dynamodb });
 
 // or globally use custom DynamoDB instance
 // all defined models will now use this driver
@@ -347,7 +347,7 @@ dynowrap.dynamoDriver(dynamodb);
 With your models defined, we can start saving them to DynamoDB.
 
 ```js
-Account.create({email: 'foo@example.com', name: 'Foo Bar', age: 21}, function (err, acc) {
+Account.create({ email: 'foo@example.com', name: 'Foo Bar', age: 21 }, (err, acc) => {
   console.log('created account in DynamoDB', acc.get('email'));
 });
 ```
@@ -355,8 +355,8 @@ Account.create({email: 'foo@example.com', name: 'Foo Bar', age: 21}, function (e
 You can also first instantiate a model and then save it.
 
 ```js
-const acc = new Account({email: 'test@example.com', name: 'Test Example'});
-acc.save(function (err) {
+const acc = new Account({ email: 'test@example.com', name: 'Test Example'v });
+acc.save((err) => {
   console.log('created account in DynamoDB', acc.get('email'));
 });
 ```
@@ -369,7 +369,7 @@ BlogPost.create({
   email: 'werner@example.com',
   title: 'Expanding the Cloud',
   content: 'Today, we are excited to announce the limited preview...'
-  }, function (err, post) {
+  }, (err, post) => {
     console.log('created blog post', post.get('title'));
   });
 ```
@@ -377,11 +377,11 @@ BlogPost.create({
 Pass an array of items and they will be saved in parallel to DynamoDB.
 
 ```js
-const item1 = {email: 'foo1@example.com', name: 'Foo 1', age: 10};
-const item2 = {email: 'foo2@example.com', name: 'Foo 2', age: 20};
-const item3 = {email: 'foo3@example.com', name: 'Foo 3', age: 30};
+const item1 = { email: 'foo1@example.com', name: 'Foo 1', age: 10 };
+const item2 = { email: 'foo2@example.com', name: 'Foo 2', age: 20 };
+const item3 = { email: 'foo3@example.com', name: 'Foo 3', age: 30 };
 
-Account.create([item1, item2, item3], function (err, acccounts) {
+Account.create([item1, item2, item3], (err, acccounts) => {
   console.log('created 3 accounts in DynamoDB', accounts);
 });
 ```
@@ -391,10 +391,10 @@ Use expressions api to do conditional writes
 ```js
   const params = {};
   params.ConditionExpression = '#i <> :x';
-  params.ExpressionAttributeNames = {'#i' : 'id'};
-  params.ExpressionAttributeValues = {':x' : 123};
+  params.ExpressionAttributeNames = { '#i' : 'id' };
+  params.ExpressionAttributeValues = { ':x' : 123};
 
-  User.create({id : 123, name : 'Kurt Warner' }, params, function (error, acc) { ... });
+  User.create({ id : 123, name : 'Kurt Warner' }, params, (error, acc) => { ... });
 ```
 
 Use the `overwrite` option to prevent over writing of existing records.
@@ -402,7 +402,7 @@ Use the `overwrite` option to prevent over writing of existing records.
 ```js
   // setting overwrite to false will generate
   // the same Condition Expression as in the previous example
-  User.create({id : 123, name : 'Kurt Warner' }, {overwrite : false}, function (error, acc) { ... });
+  User.create({ id : 123, name : 'Kurt Warner' }, { overwrite : false }, (error, acc) => { ... });
 ```
 
 ### Updating
@@ -412,7 +412,7 @@ other attributes are optional
 
 ```js
 // update the name of the foo@example.com account
-Account.update({email: 'foo@example.com', name: 'Bar Tester'}, function (err, acc) {
+Account.update({ email: 'foo@example.com', name: 'Bar Tester' }, (err, acc) => {
   console.log('update account', acc.get('name'));
 });
 ```
@@ -420,17 +420,17 @@ Account.update({email: 'foo@example.com', name: 'Bar Tester'}, function (err, ac
 `Model.update` accepts options to pass to DynamoDB when making the updateItem request
 
 ```js
-Account.update({email: 'foo@example.com', name: 'Bar Tester'}, {ReturnValues: 'ALL_OLD'}, function (err, acc) {
+Account.update({ email: 'foo@example.com', name: 'Bar Tester' }, { ReturnValues: 'ALL_OLD' }, (err, acc) => {
   console.log('update account', acc.get('name')); // prints the old account name
 });
 
 // Only update the account if the current age of the account is 22
-Account.update({email: 'foo@example.com', name: 'Bar Tester'}, {expected: {age: 22}}, function (err, acc) {
+Account.update({ email: 'foo@example.com', name: 'Bar Tester' }, { expected: { age: 22 } }, (err, acc) => {
   console.log('update account', acc.get('name'));
 });
 
 // setting an attribute to null will delete the attribute from DynamoDB
-Account.update({email: 'foo@example.com', age: null}, function (err, acc) {
+Account.update({ email: 'foo@example.com', age: null }, (err, acc) => {
   console.log('update account', acc.get('age')); // prints null
 });
 ```
@@ -465,23 +465,23 @@ You can also pass what action to perform when updating a given attribute
 Use $add to increment or decrement numbers and add values to sets
 
 ```js
-Account.update({email : 'foo@example.com', age : {$add : 1}}, function (err, acc) {
+Account.update({ email : 'foo@example.com', age : { $add : 1 } }, (err, acc) => {
   console.log('incremented age by 1', acc.get('age'));
 });
 
 BlogPost.update({
   email : 'werner@example.com',
   title : 'Expanding the Cloud',
-  tags  : {$add : 'cloud'}
-}, function (err, post) {
+  tags  : { $add : 'cloud' }
+}, (err, post) => {
   console.log('added single tag to blog post', post.get('tags'));
 });
 
 BlogPost.update({
   email : 'werner@example.com',
   title : 'Expanding the Cloud',
-  tags  : {$add : ['cloud', 'dynamodb']}
-}, function (err, post) {
+  tags  : { $add : ['cloud', 'dynamodb'] }
+}, (err, post) => {
   console.log('added tags to blog post', post.get('tags'));
 });
 ```
@@ -492,16 +492,16 @@ $del will remove values from a given set
 BlogPost.update({
   email : 'werner@example.com',
   title : 'Expanding the Cloud',
-  tags  : {$del : 'cloud'}
-}, function (err, post) {
+  tags  : { $del : 'cloud' }
+}, (err, post) => {
   console.log('removed cloud tag from blog post', post.get('tags'));
 });
 
 BlogPost.update({
   email : 'werner@example.com',
   title : 'Expanding the Cloud',
-  tags  : {$del : ['aws', 'node']}
-}, function (err, post) {
+  tags  : { $del : ['aws', 'node'] }
+}, (err, post) => {
   console.log('removed multiple tags', post.get('tags'));
 });
 ```
@@ -526,7 +526,7 @@ const params = {};
     ':tag' : dynowrap.Set(['Sports', 'Horror'], 'S')
   };
 
-Movie.update({title : 'Movie 0', description : 'This is a description'}, params, function (err, mov) {});
+Movie.update({ title : 'Movie 0', description : 'This is a description' }, params, (err, mov) => {});
 ```
 
 ### Deleting
@@ -534,16 +534,16 @@ You delete items in DynamoDB using the hashkey of model
 If your model uses both a hash and range key, then both need to be provided
 
 ```js
-Account.destroy('foo@example.com', function (err) {
+Account.destroy('foo@example.com', (err) => {
   console.log('account deleted');
 });
 
 // Destroy model using hash and range key
-BlogPost.destroy('foo@example.com', 'Hello World!', function (err) {
+BlogPost.destroy('foo@example.com', 'Hello World!', (err) => {
   console.log('post deleted')
 });
 
-BlogPost.destroy({email: 'foo@example.com', title: 'Another Post'}, function (err) {
+BlogPost.destroy({ email: 'foo@example.com', title: 'Another Post' }, (err) => {
   console.log('another post deleted')
 });
 ```
@@ -551,12 +551,12 @@ BlogPost.destroy({email: 'foo@example.com', title: 'Another Post'}, function (er
 `Model.destroy` accepts options to pass to DynamoDB when making the deleteItem request
 
 ```js
-Account.destroy('foo@example.com', {ReturnValues: 'ALL_OLD'}, function (err, acc) {
+Account.destroy('foo@example.com', {ReturnValues: 'ALL_OLD' }, (err, acc) => {
   console.log('account deleted');
   console.log('deleted account name', acc.get('name'));
 });
 
-Account.destroy('foo@example.com', {expected: {age: 22}}, function (err) {
+Account.destroy('foo@example.com', {expected: {age: 22}}, (err) => {
   console.log('account deleted if the age was 22');
 });
 ```
@@ -567,17 +567,17 @@ Use expression apis to perform conditional deletes
 ```js
 const params = {};
 params.ConditionExpression = '#v = :x';
-params.ExpressionAttributeNames = {'#v' : 'version'};
-params.ExpressionAttributeValues = {':x' : '2'};
+params.ExpressionAttributeNames = { '#v' : 'version' };
+params.ExpressionAttributeValues = { ':x' : '2' };
 
-User.destroy({id : 123}, params, function (err, acc) {});
+User.destroy({ id : 123}, params, (err, acc) => {});
 ```
 
 ### Loading models from DynamoDB
 The simpliest way to get an item from DynamoDB is by hashkey.
 
 ```js
-Account.get('test@example.com', function (err, acc) {
+Account.get('test@example.com', (err, acc) => {
   console.log('got account', acc.get('email'));
 });
 ```
@@ -585,7 +585,7 @@ Account.get('test@example.com', function (err, acc) {
 Perform the same get request, but this time peform a consistent read.
 
 ```js
-Account.get('test@example.com', {ConsistentRead: true}, function (err, acc) {
+Account.get('test@example.com', { ConsistentRead: true }, (err, acc) => {
   console.log('got account', acc.get('email'));
 });
 ```
@@ -594,7 +594,7 @@ Account.get('test@example.com', {ConsistentRead: true}, function (err, acc) {
 example:
 
 ```js
-Account.get('test@example.com', {ConsistentRead: true, AttributesToGet : ['name','age']}, function (err, acc) {
+Account.get('test@example.com', { ConsistentRead: true, AttributesToGet : ['name','age'] }, (err, acc) => {
   console.log('got account', acc.get('email'))
   console.log(acc.get('name'));
   console.log(acc.get('age'));
@@ -606,7 +606,7 @@ Get a model using hash and range key.
 
 ```js
 // load up blog post written by Werner, titled DynamoDB Keeps Getting Better and cheaper
-BlogPost.get('werner@example.com', 'dynamodb-keeps-getting-better-and-cheaper', function (err, post) {
+BlogPost.get('werner@example.com', 'dynamodb-keeps-getting-better-and-cheaper', (err, post) => {
   console.log('loaded post by range and hash key', post.get('content'));
 });
 ```
@@ -615,7 +615,7 @@ BlogPost.get('werner@example.com', 'dynamodb-keeps-getting-better-and-cheaper', 
 attributes to load up a model
 
 ```js
-BlogPost.get({email: 'werner@example.com', title: 'Expanding the Cloud'}, function (err, post) {
+BlogPost.get({ email: 'werner@example.com', title: 'Expanding the Cloud' }, (err, post) => {
   console.log('loded post', post.get('content'));
 });
 ```
@@ -623,7 +623,7 @@ BlogPost.get({email: 'werner@example.com', title: 'Expanding the Cloud'}, functi
 Use expressions api to select which attributes you want returned
 
 ```js
-  User.get({ id : '123456789'},{ ProjectionExpression : 'email, age, settings.nickname' }, function (err, acc) {});
+  User.get({ id : '123456789' },{ ProjectionExpression : 'email, age, settings.nickname' }, (err, acc) => {});
 ```
 
 ### Query
@@ -776,7 +776,7 @@ BlogPost
   .query('werner@example.com')
   .filterExpression('#title < :t')
   .expressionAttributeValues({ ':t' : 'Expanding' })
-  .expressionAttributeNames({ '#title' : 'title'})
+  .expressionAttributeNames({ '#title' : 'title' })
   .projectionExpression('#title, tag')
   .exec();
 ```
@@ -1061,8 +1061,8 @@ You can also use the new expressions api when filtering scans
 ```javascript
 User.scan()
   .filterExpression('#age BETWEEN :low AND :high AND begins_with(#email, :e)')
-  .expressionAttributeValues({ ':low' : 18, ':high' : 22, ':e' : 'test1'})
-  .expressionAttributeNames({ '#age' : 'age', '#email' : 'email'})
+  .expressionAttributeValues({ ':low' : 18, ':high' : 22, ':e' : 'test1' })
+  .expressionAttributeNames({ '#age' : 'age', '#email' : 'email' })
   .projectionExpression('#age, #email')
   .exec();
 ```
@@ -1080,8 +1080,8 @@ Account.getItems(['foo@example.com','bar@example.com', 'test@example.com'], func
 });
 
 // For models with range keys you must pass in objects of hash and range key attributes
-const postKey1 = {email : 'test@example.com', title : 'Hello World!'};
-const postKey2 = {email : 'test@example.com', title : 'Another Post'};
+const postKey1 = { email : 'test@example.com', title : 'Hello World!' };
+const postKey2 = { email : 'test@example.com', title : 'Another Post' };
 
 BlogPost.getItems([postKey1, postKey2], function (err, posts) {
   console.log('loaded posts');
@@ -1182,12 +1182,12 @@ const Account = dynowrap.define('Account', {
   }
 });
 
-Account.create({email: 'test@example.com', name : 'Test Account'}, function (err, acc) {
+Account.create({ email: 'test@example.com', name : 'Test Account' }, (err, acc) => {
   console.log('created account at', acc.get('created')); // prints created Date
 
   acc.set({age: 22});
 
-  acc.update(function (err) {
+  acc.update((err) => {
     console.log('updated account age');
   });
 
@@ -1200,12 +1200,10 @@ See the [examples][0] for more working sample code.
 
 dynowrap is provided as-is, free of charge. For support, you have a few choices:
 
-- Ask your support question on [Stackoverflow.com](http://stackoverflow.com), and tag your question with **dynowrap**.
+- Ask your support question on [stackoverflow.com](https://stackoverflow.com), and tag your question with **dynowrap**.
 - If you believe you have found a bug in dynowrap, please submit a support ticket on
  the [Github Issues page for dynowrap](https://github.com/afgallo/dynowrap/issues). We'll get to them as soon as we can.
 - For general feedback message me on [twitter](https://twitter.com/andre__gallo)
-- For more personal or immediate support, I’m available for hire to consult on your project.
-[Contact](mailto:andrew.t.clarke@gmail.com) me for more detals.
 
 ### Maintainers
 
@@ -1218,7 +1216,7 @@ Copyright (c) 2016 Ryan Fitzgerald
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
+'Software'), to deal in the Software without restriction, including
 without limitation the rights to use, copy, modify, merge, publish,
 distribute, sublicense, and/or sell copies of the Software, and to
 permit persons to whom the Software is furnished to do so, subject to
@@ -1227,7 +1225,7 @@ the following conditions:
 The above copyright notice and this permission notice shall be
 included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
@@ -1236,7 +1234,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [0]: https://github.com/afgallo/dynowrap/tree/main/examples
-[1]: http://nodejs.org
-[2]: http://aws.amazon.com/sdkfornodejs
+[1]: https://nodejs.org
+[2]: https://aws.amazon.com/sdkfornodejs
 [3]: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html
-[4]: http://aws.amazon.com/dynamodb
+[4]: https://aws.amazon.com/dynamodb
