@@ -1,10 +1,7 @@
 ﻿# dynowrap
-<!-- [![Build Status](https://travis-ci.org/clarkie/dynowrap.png?branch=master)](https://travis-ci.org/clarkie/dynowrap)
-[![Coverage Status](https://coveralls.io/repos/github/clarkie/dynowrap/badge.svg)](https://coveralls.io/github/clarkie/dynowrap)
-[![npm version](https://badge.fury.io/js/dynowrap.svg)](http://badge.fury.io/js/dynowrap)
-[![Dependencies Status](https://david-dm.org/clarkie/dynowrap.svg)](https://david-dm.org/clarkie/dynowrap)
-[![DevDependencies Status](https://david-dm.org/clarkie/dynowrap/dev-status.svg)](https://david-dm.org/clarkie/dynowrap#info=devDependencies)
-[![Known Vulnerabilities](https://snyk.io/test/npm/dynowrap/badge.svg)](https://snyk.io/test/npm/dynowrap) -->
+
+[![Build Status](https://github.com/afgallo/dynowrap/workflows/ci/badge.svg?branch=main)](https://github.com/afgallo/dynowrap/actions)
+[![Coverage Status](https://coveralls.io/repos/github/afgallo/dynowrap/badge.svg?branch=main)](https://coveralls.io/github/afgallo/dynowrap?branch=main)
 
 dynowrap is a [DynamoDB][4] data wrapper for [node.js][1]. This project has been forked from
 [Dynogels](https://github.com/clarkie/dynogels) with the aim to offer a more modern development approach with up-to-date dependencies and reduced API surface.
