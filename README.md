@@ -1,4 +1,6 @@
-﻿# dynowrap
+﻿<div align="center">
+  <img width="150" height="150" src="logo.png">
+</div>
 
 [![Build Status](https://github.com/afgallo/dynowrap/workflows/ci/badge.svg?branch=main)](https://github.com/afgallo/dynowrap/actions)
 [![Coverage Status](https://coveralls.io/repos/github/afgallo/dynowrap/badge.svg?branch=main)](https://coveralls.io/github/afgallo/dynowrap?branch=main)
