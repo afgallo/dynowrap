@@ -34,7 +34,7 @@
     "package.json"
   ],
   "dependencies": {
-    "async": "2.6.3",
+    "async": "2.6.4",
     "aws-sdk": "2.789.0",
     "lodash": "4.17.20",
     "uuid": "8.3.1"
