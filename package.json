@@ -54,7 +54,7 @@
     "mocha": "8.x.x",
     "nyc": "15.x.x",
     "prettier": "2.x.x",
-    "semantic-release": "17.x.x",
+    "semantic-release": "19.x.x",
     "sinon": "9.x.x"
   },
   "peerDependencies": {
